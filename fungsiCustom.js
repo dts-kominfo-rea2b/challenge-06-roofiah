@@ -50,21 +50,24 @@ const dataProcess = (data) => {
 
 const bacaData = (fnCallback) => {
   let files = [file1, file2, file3]
-  let data = [];
-
-  files.map((item) => {
-    fs.readFile(item, { encoding: 'utf-8' }, (err, readFiles) => {
-      try {
-        data.push(dataProcess(JSON.parse(readFiles)))
-        fnCallback(null, data)
-      } catch (err) {
-        fnCallback(err, null)
-      }
+  let dataNew = [];
+  fs.readFile(files[0], { encoding: 'utf-8' }, (err, data) => {
+    if (err) fnCallback(err, null)
+    const processData = dataProcess(JSON.parse(data))
+    dataNew.push(processData)
+    fs.readFile(files[1], { encoding: 'utf-8' }, (err, data) => {
+      if (err) fnCallback(err, null)
+      const processData = dataProcess(JSON.parse(data))
+      dataNew.push(processData)
+      fs.readFile(files[2], { encoding: 'utf-8' }, (err, data) => {
+        if (err) fnCallback(err, null)
+        const processData = dataProcess(JSON.parse(data))
+        dataNew.push(processData)
+        fnCallback(null, dataNew)
+      })
     })
   })
 }
-
-
 
 // ! JANGAN DIMODIFIKASI
 module.exports = {
